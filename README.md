@@ -11,6 +11,7 @@ terms and operators must all be seperated by spaces suchs: 2 + 5 * 6 - 4
     3- For now calculations are limited to integers
     4- Numbers are stored as strings, so the numbers can be large as possible (Maximum number of supported digis equals to maximum supported string length in rust)
     5- you can also use Full logging to even log the calculations more detailed,
-        use -fl param to enable full log before the terms you want:
-        2 ^ 5 -fl + 10 ^ 5
+        use +fl param to enable full log before the terms you want:
+        2 ^ 5 +fl + 10 ^ 5
+        and -fl to turn full log off.
     6- Priorities will be applied soon
