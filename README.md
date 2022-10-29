@@ -2,6 +2,9 @@
 byteculator overcomes overflow problem, using strings for implementing basic math operations, 
 so this way the calculations can even exceed the integer or float number boundaries
 
+# Input note:
+terms and operators must all be seperated by spaces suchs: 2 + 5 * 6 - 4
+
 # Features:
     1- Solves and logs the expressions step by step
     2- Supported Operations: Addition (+), Substraction (-), Multiply (*), Power (^)
@@ -10,3 +13,4 @@ so this way the calculations can even exceed the integer or float number boundar
     5- you can also use Full logging to even log the calculations more detailed,
         use -fl param to enable full log before the terms you want:
         2 ^ 5 -fl + 10 ^ 5
+    6- Priorities will be applied soon
