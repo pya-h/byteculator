@@ -12,13 +12,15 @@ use std::io;
 const PADDING: &str = "\t \t \t";
 // EDIT THIS WHEN WORKING WHIT FLOATING POINTS
 fn rem_redundant(mut str_num: String) -> String {
-    let fst_digit_idx = if str_num.chars().nth(0) == Some('-') {
-        1
-    } else {
-        0
-    };
-    while fst_digit_idx < str_num.len() && str_num.chars().nth(fst_digit_idx) == Some('0') {
-        str_num.remove(fst_digit_idx);
+    if str_num.len() > 1 {
+        let fst_digit_idx = if str_num.chars().nth(0) == Some('-') {
+            1
+        } else {
+            0
+        };
+        while fst_digit_idx < str_num.len() && str_num.chars().nth(fst_digit_idx) == Some('0') {
+            str_num.remove(fst_digit_idx);
+        }
     }
     return str_num;
 }
@@ -55,29 +57,23 @@ fn add(op1: String, op2: String) -> String {
     let mut j = y.len();
     let offset: u8 = '0' as u8;
     let mut carry = 0;
-    let mut digit;
+    let mut digit: u8;
 
     while j > 0 {
         i -= 1;
         j -= 1;
 
         digit = carry + x[i] - offset + y[j] - offset;
-        carry = 0;
-        while digit >= 10 {
-            carry += 1;
-            digit -= 10;
-        }
+        carry = digit / 10;
+        digit %= 10;
         r = format!("{}{}", digit, r);
     }
     while i > 0 {
         i -= 1;
 
         digit = carry + x[i] - offset;
-        carry = 0;
-        while digit >= 10 {
-            carry += 1;
-            digit -= 10;
-        }
+        carry = digit / 10;
+        digit %= 10;
         r = format!("{}{}", digit, r);
     }
     if carry > 0 {
@@ -259,14 +255,8 @@ fn pow(base: String, power: String, log: bool) -> String {
 
     result
 }
-fn main() {
-    println!("bigcalc v1.0.0: calculator for large numbers \n \t Enter the expression: \n");
-    let mut expression = String::new();
 
-    io::stdin()
-        .read_line(&mut expression)
-        .expect("Wrong Expression");
-
+fn app(expression: String) {
     let ops = expression.split_whitespace().map(str::to_string);
     let mut fullog = false;
     let mut result = String::new();
@@ -276,7 +266,7 @@ fn main() {
         if x == "+fl" {
             fullog = true;
         } else if x == "-fl" {
-            fullog == false;
+            fullog = false;
         } else {
             let x = rem_redundant(x);
             if !result.is_empty() {
@@ -308,4 +298,18 @@ fn main() {
     }
     println!("\n--------------------------------------------- finally --------------------------------------------");
     println!("    = {}", format!("{}", result).purple().bold());
+} 
+fn main() {
+    println!("bigcalc v1.0.0: calculator for large numbers \n \t Enter the expression: \n");
+
+    loop {
+        let mut expression = String::new();
+        io::stdin()
+            .read_line(&mut expression)
+            .expect("Wrong Expression");
+        match expression.as_str().trim() {
+            "x" | "" => break,
+            _ => app(expression.clone()),
+        }
+    }
 }
