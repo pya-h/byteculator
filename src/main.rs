@@ -32,6 +32,7 @@ fn txtstylish(text: &String, color: &str, style: char) -> ColoredString {
         _ => txt,
     };
 }
+
 // EDIT THIS WHEN WORKING WHIT FLOATING POINTS
 fn rem_redundant(str_num: &mut String) {
     if str_num.len() > 1 {
