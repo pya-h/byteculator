@@ -45,32 +45,30 @@ fn rem_redundant(str_num: &mut String) {
   }
 }
 
-fn add(op1: String, op2: String) -> String {
-  let mut fstop = op1.clone();
-  let mut sndop = op2.clone();
-  let fstop_negative = fstop.chars().nth(0) == Some('-');
-  let sndop_negative = sndop.chars().nth(0) == Some('-');
+fn add(mut op1: String, mut op2: String) -> String {
+  let op1_negative = op1.chars().nth(0) == Some('-');
+  let op2_negative = op2.chars().nth(0) == Some('-');
 
-  if fstop_negative {
-      fstop.remove(0);
-      if !sndop_negative {
-          return sub(sndop, fstop);
+  if op1_negative {
+      op1.remove(0);
+      if !op2_negative {
+          return sub(op2, op1);
       }
-      sndop.remove(0);
-  } else if sndop_negative {
-      sndop.remove(0);
-      return sub(fstop, sndop);
+      op2.remove(0);
+  } else if op2_negative {
+      op2.remove(0);
+      return sub(op1, op2);
   }
 
   let mut r = String::new();
 
   let y;
-  let x = if fstop.len() <= sndop.len() {
-      y = fstop.as_bytes();
-      sndop.as_bytes()
+  let x = if op1.len() <= op2.len() {
+      y = op1.as_bytes();
+      op2.as_bytes()
   } else {
-      y = sndop.as_bytes();
-      fstop.as_bytes()
+      y = op2.as_bytes();
+      op1.as_bytes()
   };
 
   let mut i = x.len();
@@ -101,45 +99,43 @@ fn add(op1: String, op2: String) -> String {
   }
   // find the best and fastest way tp concat atrings
   rem_redundant(&mut r);
-  if fstop_negative && sndop_negative {
+  if op1_negative && op2_negative {
       format!("-{}", r)
   } else {
       r
   }
 }
 
-fn sub(op1: String, op2: String) -> String {
-  let mut fstop = op1.clone();
-  let mut sndop = op2.clone();
+fn sub(mut op1: String, mut op2: String) -> String {
 
-  let fstop_negative = fstop.chars().nth(0) == Some('-');
-  let sndop_negative = sndop.chars().nth(0) == Some('-');
+  let op1_negative = op1.chars().nth(0) == Some('-');
+  let op2_negative = op2.chars().nth(0) == Some('-');
 
-  if fstop_negative {
-      fstop.remove(0);
-      if !sndop_negative {
-          return format!("-{}", add(fstop, sndop));
+  if op1_negative {
+      op1.remove(0);
+      if !op2_negative {
+          return format!("-{}", add(op1, op2));
       }
-      sndop.remove(0);
-      let temp = fstop;
-      fstop = sndop;
-      sndop = temp;
-  } else if sndop_negative {
-      sndop.remove(0);
-      return add(fstop, sndop);
+      op2.remove(0);
+      let temp = op1;
+      op1 = op2;
+      op2 = temp;
+  } else if op2_negative {
+      op2.remove(0);
+      return add(op1, op2);
   }
 
   let mut r = String::new();
   let mut negative = false;
   let x;
   let y;
-  if fstop.len() < sndop.len() || (fstop.len() == sndop.len() && fstop <= sndop) {
+  if op1.len() < op2.len() || (op1.len() == op2.len() && op1 <= op2) {
       negative = true;
-      x = sndop.as_bytes(); //.map(|digit| digit - ('0' as u8))
-      y = fstop.as_bytes();
+      x = op2.as_bytes(); //.map(|digit| digit - ('0' as u8))
+      y = op1.as_bytes();
   } else {
-      y = sndop.as_bytes(); //.map(|digit| digit - ('0' as u8))
-      x = fstop.as_bytes();
+      y = op2.as_bytes(); //.map(|digit| digit - ('0' as u8))
+      x = op1.as_bytes();
   }
   let mut i = x.len();
   let mut j = y.len();
@@ -179,35 +175,33 @@ fn sub(op1: String, op2: String) -> String {
   }
 }
 
-fn mul(op1: String, op2: String, logidx: u64) -> String {
+fn mul(mut op1: String, mut op2: String, logidx: u64) -> String {
   let mut r = String::new();
-  let mut fstop = op1.clone();
-  let mut sndop = op2.clone();
 
-  let fstop_sign: i8 = if fstop.chars().nth(0) == Some('-') {
+  let op1_sign: i8 = if op1.chars().nth(0) == Some('-') {
       -1
   } else {
       1
   };
-  let sndop_sign: i8 = if sndop.chars().nth(0) == Some('-') {
+  let op2_sign: i8 = if op2.chars().nth(0) == Some('-') {
       -1
   } else {
       1
   };
 
-  if fstop_sign == -1 {
-      fstop.remove(0);
+  if op1_sign == -1 {
+      op1.remove(0);
   }
-  if sndop_sign == -1 {
-      sndop.remove(0);
+  if op2_sign == -1 {
+      op2.remove(0);
   }
   let y;
-  let x = if fstop.len() <= sndop.len() {
-      y = fstop.as_bytes();
-      sndop.as_bytes()
+  let x = if op1.len() <= op2.len() {
+      y = op1.as_bytes();
+      op2.as_bytes()
   } else {
-      y = sndop.as_bytes();
-      fstop.as_bytes()
+      y = op2.as_bytes();
+      op1.as_bytes()
   };
 
   let ascii_offset = '0' as u8;
@@ -273,7 +267,7 @@ fn mul(op1: String, op2: String, logidx: u64) -> String {
           txtstylish(&format!("#{} END", logidx), "yellow", 'i')
       );
   }
-  if fstop_sign * sndop_sign == -1 {
+  if op1_sign * op2_sign == -1 {
       format!("-{}", r)
   } else {
       r
@@ -322,82 +316,95 @@ fn pow(base: String, power: String, logidx: u64) -> String {
 
 fn app(expression: String, mut log: bool, mut fullog: bool) -> [bool; 2] {
   // fullog = false;
-  let ops = expression.split_whitespace().map(str::to_string);
+  let mut ops = expression.split_whitespace().map(str::to_string).collect::<Vec<String>>();
   let mut logidx: u64 = 0;
-  let mut result = String::new();
-  let mut operator = String::new();
+  let mut term_idx = 0;
+  let mut operator_idx = 0;
   if log {
       println!("\n--------------------------------------------- LOG --------------------------------------------");
   }
-  for mut x in ops {
-      if x == "+l" {
-          log = true;
-      } else if x == "-l" {
-          log = false;
-          fullog = false;
-      } else if x == "+f" {
-          fullog = true;
-          log = true;
-      } else if x == "-f" {
-          fullog = false;
-      } else {
-          rem_redundant(&mut x);
-          if !result.is_empty() {
-              if !operator.is_empty() {
-                  let length_long = result.len() + x.len() >= 30;
-                  if log {
-                      print!("{} {} {} {}", PADDING, result, operator, x);
-                  }
+  let priorities = [("^", "", ""), ("x", "*", "/"), ("+", "-", "")];
+  for current in priorities {
+    let mut i = 0;
+    while ops.len() > 1 && i < ops.len() {
+        if ops[i] == "+l" {
+            log = true;
+        } else if ops[i] == "-l" {
+            log = false;
+            fullog = false;
+        } else if ops[i] == "+f" {
+            fullog = true;
+            log = true;
+        } else if ops[i] == "-f" {
+            fullog = false;
+        } else {
 
-                  result = match operator.as_str() {
-                      "+" => add(result, x),
-                      "-" => sub(result, x),
-                      "*" | "x" => mul(
-                          result,
-                          x,
-                          if fullog {
-                              logidx += 1;
-                              logidx
-                          } else {
-                              0
-                          },
-                      ),
-                      "^" => pow(
-                          result,
-                          x,
-                          if fullog {
-                              logidx += 1;
-                              logidx
-                          } else {
-                              0
-                          },
-                      ),
-                      _ => break,
-                  };
+            if operator_idx > 0 && (ops[operator_idx] == current.0 || (current.1 != "" && current.1 == ops[operator_idx]) || (current.2  != "" && current.2 == ops[operator_idx])) {
+                rem_redundant(&mut ops[term_idx]);
+                rem_redundant(&mut ops[i]);
 
-                  if log {
-                      println!(
-                          "{} = {}{}",
-                          if length_long { "\n\t" } else { "" },
-                          txtstylish(&result, "blue", 'b'),
-                          if length_long { "\n" } else { "" }
-                      );
-                  }
-                  operator = String::new();
-              } else {
-                  operator = x;
-              }
-          } else {
-              result = x;
-          }
-      }
-  }
+                let length_long = ops[term_idx].len() + ops[i].len() >= 30;
+                if log {
+                    print!("{} {} {} {}", PADDING, ops[term_idx], ops[operator_idx], ops[i]);
+                }
+
+                ops[term_idx] = match ops[operator_idx].as_str() {
+                    "+" => add(ops[term_idx].clone(), ops[i].clone()),
+                    "-" => sub(ops[term_idx].clone(), ops[i].clone()),
+                    "*" | "x" => mul(
+                        ops[term_idx].clone(),
+                        ops[i].clone(),
+                        if fullog {
+                            logidx += 1;
+                            logidx
+                        } else {
+                            0
+                        },
+                    ),
+                    "^" => pow(
+                        ops[term_idx].clone(),
+                        ops[i].clone(),
+                        if fullog {
+                            logidx += 1;
+                            logidx
+                        } else {
+                            0
+                        },
+                    ),
+                    _ => break,
+                };
+                if log {
+                    println!(
+                        "{} = {}{}",
+                        if length_long { "\n\t" } else { "" },
+                        txtstylish(&ops[term_idx], "blue", 'b'),
+                        if length_long { "\n" } else { "" }
+                    );
+                }
+                ops.remove(i);
+                ops.remove(operator_idx);
+                i = term_idx;
+                operator_idx = 0;
+            }
+            else {
+                operator_idx = match ops[i].as_str() {
+                    "^" | "*" | "x" | "+" | "-" | "/" => i,
+                    _ => {term_idx = i; 0}
+                };
+            } 
+
+        }
+        i += 1;
+    }
+    }
   println!("\n--------------------------------------------- finally --------------------------------------------");
-  println!("    = {}", txtstylish(&result, "purple", 'b'));
+  println!("    = {}", txtstylish(&(ops[term_idx]), "purple", 'b'));
   return [log, fullog];
 }
 fn main() {
   println!("byteculator v0.1.0: calculator for large numbers \n \t Enter the expression: \n");
+  println!("\n--------------------------------------------- NEW --------------------------------------------");
+
   let mut log = true;
   let mut fullog = false;
   loop {
