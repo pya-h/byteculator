@@ -13,6 +13,7 @@ use std::io;
 
 const PADDING: &str = "\t \t \t";
 
+// test this: 2 + +f 102 * 512 ^ 12 -f * 201 + 100 -l * 104165456565646546545645646 +l + 10
 fn txtstylish(text: &String, color: &str, style: char) -> ColoredString {
     let mut txt = format!("{}", text).white();
     txt = match color {
@@ -273,16 +274,13 @@ fn mul(mut op1: String, mut op2: String, logidx: u64) -> String {
     }
 }
 
-fn pow(base: String, power: String, logidx: u64) -> String {
+fn pow(base: String, mut power: String, logidx: u64) -> String {
     let mut result = format!("1");
     let length_long = base.len() + power.len() >= 30;
-    let negative = false;
-    let power = if power.chars.nth(0) == Some('-') {
-        negative = true;
-        power.remove(0)
-    } else {
-        power
-    };
+    let negative = if power.chars().nth(0) == Some('-') {
+        power.remove(0);
+        true
+    } else { false };
     let temp_power: u128 = power.parse().unwrap();
 
     if logidx > 0 {
@@ -316,7 +314,7 @@ fn pow(base: String, power: String, logidx: u64) -> String {
         );
     }
 
-    if negative {
+    return if negative {
         format!("1/{}", result)
     } else {
         result
