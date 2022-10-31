@@ -20,6 +20,6 @@ terms and operators must all be seperated by spaces suchs: 2 + 5 * 6 - 4
     5- -l/+l and -f/+f params can be used in any place, so you can exactly determine
         which part of the expression should be logged or full logged.
     5- For now calculations are limited to integers
-    6- Priorities are supported.
+    6- Priorities are supported; +p param enables priority, -p param disables priority
     7- enter x or empty input to close the app.
     

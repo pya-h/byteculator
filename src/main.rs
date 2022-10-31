@@ -2,7 +2,7 @@
  *                                         *
  *  APP           : ByteCulator                 *
  *    Programmer    : pya.h  [fr3E.k!]              *
- *    Last Update   : 2022/10/30 Sun.  02:00 PM   *
+ *    Last Update   : 2022/10/31 Sun.  10:00 PM   *
  *                                                     *
 **********************************************************/
 extern crate colored;
@@ -33,6 +33,8 @@ fn txtstylish(text: &String, color: &str, style: char) -> ColoredString {
     };
 }
 
+// IS IT BETTER TO USE NORMAL NUMERICAL OPERATIONS FOR SMALL RANGE
+// AND USE STRING CALCULATIONS FOR VERY LARGES
 // EDIT THIS WHEN WORKING WHIT FLOATING POINTS
 fn rem_redundant(str_num: &mut String) {
     if str_num.len() > 1 {
@@ -322,7 +324,7 @@ fn pow(base: String, mut power: String, logidx: u64) -> String {
     };
 }
 
-fn app(expression: String, params: (bool, bool)) -> (bool, bool) {
+fn app(expression: String, params: (bool, bool, bool)) -> (bool, bool, bool) {
     // fullog = false;
     let mut ops = expression
         .split_whitespace()
@@ -333,6 +335,7 @@ fn app(expression: String, params: (bool, bool)) -> (bool, bool) {
     let mut operator_idx = 0;
     let mut log = params.0;
     let mut fullog = params.1;
+    let mut priority = params.2;
     if log {
         println!("\n--------------------------------------------- LOG --------------------------------------------");
     }
@@ -341,6 +344,7 @@ fn app(expression: String, params: (bool, bool)) -> (bool, bool) {
     for current in priorities.iter() {
         log = params.0;
         fullog = params.1;
+        priority = params.2;
         let mut i = 0;
         while ops.len() > 1 && i < ops.len() {
             if ops[i] == "+l" {
@@ -353,9 +357,15 @@ fn app(expression: String, params: (bool, bool)) -> (bool, bool) {
                 log = true;
             } else if ops[i] == "-f" {
                 fullog = false;
-            } else {
+            } else if ops[i] == "+p" {
+                priority = true
+            } else if ops[i] == "-p" {
+                priority = false;
+            }
+            
+            else {
                 if operator_idx > 0
-                    && (ops[operator_idx] == current.0
+                    && (!priority || ops[operator_idx] == current.0
                         || (current.1 != "" && current.1 == ops[operator_idx])
                         || (current.2 != "" && current.2 == ops[operator_idx]))
                 {
@@ -422,13 +432,14 @@ fn app(expression: String, params: (bool, bool)) -> (bool, bool) {
     }
     println!("\n--------------------------------------------- finally --------------------------------------------");
     println!("    = {}", txtstylish(&(ops[term_idx]), "purple", 'b'));
-    return (log, fullog);
+    return (log, fullog, priority);
 }
 fn main() {
     println!("byteculator v0.1.0: calculator for large numbers \n \t Enter the expression: \n");
 
     let mut log = true;
     let mut fullog = false;
+    let mut priority = true;
     loop {
         println!("\n--------------------------------------------- NEW --------------------------------------------");
         let mut expression = String::new();
@@ -444,10 +455,12 @@ fn main() {
                         log && (expression.chars().nth(0) != Some('-')
                             || expression.chars().nth(1) != Some('l')),
                         fullog,
+                        priority,
                     ),
                 );
                 fullog = params_status.1;
-                log = params_status.0
+                log = params_status.0;
+                priority = params_status.2;
             }
         }
     }
