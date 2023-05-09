@@ -1,4 +1,4 @@
-# ByteCulator
+# ByteCulator: First project on the streets
 byteculator overcomes overflow problem, using strings for implementing basic math operations, 
 so this way the calculations can even exceed the integer or float number boundaries
 
@@ -22,4 +22,6 @@ terms and operators must all be seperated by spaces suchs: 2 + 5 * 6 - 4
     5- For now calculations are limited to integers
     6- Priorities are supported; +p param enables priority, -p param disables priority
     7- enter x or empty input to close the app.
-    
+
+# P.S.
+	This is the first project on coded while walking the streets. so its kind of special for me :]
